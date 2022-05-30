@@ -75,7 +75,12 @@ Route::post('save-address',[AddressController::class,'save_address'])->name('sav
 
 ///////////////////////////////////////user dashboard section start////////////////////////////////////////////
 Route::get('user-dashboard',[UserdashController::class,'user_dash_index'])->name('user_dash_index');
-//Route::get('user-info',[UserdashController::class,'user_details'])->name('user_details');
+Route::get('my-order',[UserdashController::class,'user_order'])->name('user_orders');
+Route::get('my-cart',[UserdashController::class,'user_cart'])->name('user_cart');
+Route::get('my-profile',[UserdashController::class,'user_profile'])->name('user_profile');
+Route::post('save-profile/{user_id}',[UserdashController::class,'user_update'])->name('user_update');
+Route::get('remove-cart/{cart_id}',[UserdashController::class,'removeCart'])->name('removeCart');
+Route::get('delete-order/{del_order_id}',[UserdashController::class,'deleteOrder'])->name('delete_order');
 //////////////////////////////////////user dashboard section end///////////////////////////////////////////////
 
 

@@ -28,6 +28,19 @@
   }
 </script>
 <style>
+    .hello{
+        width: 100px;
+        background: #af4f0b;
+        font-weight: bold;
+        color: white;
+        border: 0 none;
+        border-radius: 0px;
+        cursor: pointer;
+        padding: 10px 5px;
+        float: right;
+    }
+</style>
+<style>
   button.acc {
     background-color: transparent;
     border: 0px;
@@ -110,7 +123,7 @@
               <ul class="aiz-side-nav-list px-2" data-toggle="aiz-side-menu">
 
                 <li class="aiz-side-nav-item">
-                  <a href="{{route('user_dash_index')}}" class="aiz-side-nav-link active">
+                  <a href="{{route('user_dash_index')}}" class="aiz-side-nav-link">
                     <i class="las la-home aiz-side-nav-icon"></i>
                     <span class="aiz-side-nav-text">Dashboard</span>
                   </a>
@@ -130,7 +143,7 @@
                     <span class="badge badge-inline badge-success">new</span> </a>
                 </li>
                 <li class="aiz-side-nav-item">
-                  <a href="{{route('user_profile')}}" class="aiz-side-nav-link ">
+                  <a href="{{route('user_profile')}}" class="aiz-side-nav-link active">
                     <i class="las la-user aiz-side-nav-icon"></i>
                     <span class="aiz-side-nav-text">Manage Profile</span>
                   </a>
@@ -152,129 +165,58 @@
             </button>
           </div>
         </div>
+        
+
         <div class="aiz-user-panel">
-          <div class="aiz-titlebar mt-2 mb-4">
-            <div class="row align-items-center">
-              <div class="col-md-6">
-                <h1 class="h3">Dashboard</h1>
-              </div>
+            <div class="aiz-titlebar mt-2 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="h3">Manage Profile</h1>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="row gutters-10">
-            <div class="col-md-4">
-              <div class="bg-grad-1 text-white rounded-lg mb-4 overflow-hidden">
-                <div class="px-3 pt-3">
-                  <div class="h3 fw-700">
-                  @if(!empty($productCount))
-                   {{$productCount}} Product
-                   @else
-                   0 Product
-                   @endif
-                  </div>
-                  <div class="opacity-50">in your cart</div>
+            <form action="{{route('user_update',$fetchUserInfo->pos_customer_activity_key)}}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <!-- <input type="hidden" name="_token" value="iDiTlSCTwaimSUMknD5ykXpXNlxbORjh3KKZWN3k">  -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0 h6">Basic Info</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Your First Name</label>
+                            <input type="text" name="your_name" value="{{$fetchUserInfo->pos_customer_first_name}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        </div>
+                        <!-- <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Your last Name</label>
+                            <input type="text" name="your_lname" value="{{$fetchUserInfo->pos_customer_last_name}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        </div> -->
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Your Phone</label>
+                            <input type="text" value="{{$fetchUserInfo->pos_customer_ph_number}}" name="your_phone" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Photo</label>
+                            <input class="form-control" name="your_file" type="file" id="formFile">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Change Password</label>
+                            <input type="password" name="y_pass" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <!-- <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+                            <input type="password" name="y_c_pass" class="form-control" id="exampleInputPassword1">
+                        </div> -->
+                        <button type="submit" class="hello">Update</button>
+                    </div>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                  <path fill="rgba(255,255,255,0.3)" fill-opacity="1"
-                    d="M0,192L30,208C60,224,120,256,180,245.3C240,235,300,181,360,144C420,107,480,85,540,96C600,107,660,149,720,154.7C780,160,840,128,900,117.3C960,107,1020,117,1080,112C1140,107,1200,85,1260,74.7C1320,64,1380,64,1410,64L1440,64L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z">
-                  </path>
-                </svg>
-              </div>
+            </form>
+            <br>
             </div>
-            <!-- <div class="col-md-4">
-              <div class="bg-grad-2 text-white rounded-lg mb-4 overflow-hidden">
-                <div class="px-3 pt-3">
-                  <div class="h3 fw-700">8 Products</div>
-                  <div class="opacity-50">Canceled Order</div>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                  <path fill="rgba(255,255,255,0.3)" fill-opacity="1"
-                    d="M0,128L34.3,112C68.6,96,137,64,206,96C274.3,128,343,224,411,250.7C480,277,549,235,617,213.3C685.7,192,754,192,823,181.3C891.4,171,960,149,1029,117.3C1097.1,85,1166,43,1234,58.7C1302.9,75,1371,149,1406,186.7L1440,224L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z">
-                  </path>
-                </svg>
-              </div>
-            </div> -->
-            <div class="col-md-4">
-              <div class="bg-grad-3 text-white rounded-lg mb-4 overflow-hidden">
-                <div class="px-3 pt-3">
-                  @if(!empty($getAllOrder))
-                  <div class="h3 fw-700">{{$getAllOrder}} Products</div>
-                  <div class="opacity-50">you ordered</div>
-                  @else
-                  <div class="h3 fw-700">0 Products</div>
-                  <div class="opacity-50">you ordered</div>
-                  @endif
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                  <path fill="rgba(255,255,255,0.3)" fill-opacity="1"
-                    d="M0,192L26.7,192C53.3,192,107,192,160,202.7C213.3,213,267,235,320,218.7C373.3,203,427,149,480,117.3C533.3,85,587,75,640,90.7C693.3,107,747,149,800,149.3C853.3,149,907,107,960,112C1013.3,117,1067,171,1120,202.7C1173.3,235,1227,245,1280,213.3C1333.3,181,1387,107,1413,69.3L1440,32L1440,320L1413.3,320C1386.7,320,1333,320,1280,320C1226.7,320,1173,320,1120,320C1066.7,320,1013,320,960,320C906.7,320,853,320,800,320C746.7,320,693,320,640,320C586.7,320,533,320,480,320C426.7,320,373,320,320,320C266.7,320,213,320,160,320C106.7,320,53,320,27,320L0,320Z">
-                  </path>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="row gutters-10">
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header">
-                  <h6 class="mb-0">Default Shipping Address</h6>
-                </div>
-                <div class="card-body">
-                  @if(!empty($fetchAddress))
-                  
-                  <ul class="list-unstyled mb-0">
-                    <li class=" py-2"><span>Address : {{$fetchAddress->full_address}}</span></li>
-                    @if(!empty($getCountry))
-                    <li class=" py-2"><span>Country : {{$getCountry->name}}</span></li>
-                    @else
-                    <li class=" py-2"><span>Country : No Country</span></li>
-                    @endif
-                    @if(!empty($getState))
-                    <li class=" py-2"><span>State : {{$getState->name}}</span></li>
-                    @else
-                    <li class=" py-2"><span>State : No State</span></li>
-                    @endif
-                    @if(!empty($getCity))
-                    <li class=" py-2"><span>City : {{$getCity->name}}</span></li>
-                    @else
-                    <li class=" py-2"><span>City : No City</span></li>
-                    @endif
-                    <li class=" py-2"><span>Postal Code : {{$fetchAddress->postal_code}}</span></li>
-                    <li class=" py-2"><span>Phone : {{$fetchAddress->phone_number}}</span></li>
-                  </ul>
-           
-                  @else
-                  <ul class="list-unstyled mb-0">
-                    <li class=" py-2"><span>Address : No Address</span></li>
-                    <li class=" py-2"><span>Country : No Country</span></li>
-                    <li class=" py-2"><span>State : No State</span></li>
-                    <li class=" py-2"><span>City : No City</span></li>
-                    <li class=" py-2"><span>Postal Code : XXXXXX</span></li>
-                    <li class=" py-2"><span>Phone : XXX-XXX-XXXX</span></li>
-                  </ul>
-                  @endif
-                </div>
-              </div>
-            </div>
-            <!--<div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Purchased Package</h6>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <img src="https://demo.activeitzone.com/ecommerce/public/uploads/all/zu3eVLzwf8iAs4AG7K5h4902UhaXVR0MbWVevxjJ.png"
-                                            class="img-fluid mb-4 h-110px">
-                                        <p class="mb-1 text-muted">Product Upload: 300 times</p>
-                                        <p class="text-muted mb-4">Product Upload Remaining: 594 times</p>
-                                        <h5 class="fw-600 mb-3 text-primary">Current Package: Premium</h5>
-                                        <a href="https://demo.activeitzone.com/ecommerce/customer-packages"
-                                            class="btn btn-success d-inline-block">Upgrade Package</a>
-                                    </div>
-                                </div>
-                            </div>-->
-          </div>
-          
+
+
         </div>
-      </div>
     </div>
   </section>
   <div class="aiz-mobile-bottom-nav d-xl-none fixed-bottom bg-white shadow-lg border-top rounded-top"
@@ -325,7 +267,7 @@
             <ul class="aiz-side-nav-list px-2" data-toggle="aiz-side-menu">
 
               <li class="aiz-side-nav-item">
-                <a href="{{route('user_dash_index')}}" class="aiz-side-nav-link active">
+                <a href="{{route('user_dash_index')}}" class="aiz-side-nav-link">
                   <i class="las la-home aiz-side-nav-icon"></i>
                   <span class="aiz-side-nav-text">Dashboard</span>
                 </a>
@@ -345,7 +287,7 @@
                   <span class="badge badge-inline badge-success">new</span> </a>
               </li>
               <li class="aiz-side-nav-item">
-                <a href="{{route('user_profile')}}" class="aiz-side-nav-link ">
+                <a href="{{route('user_profile')}}" class="aiz-side-nav-link active">
                   <i class="las la-user aiz-side-nav-icon"></i>
                   <span class="aiz-side-nav-text">Manage Profile</span>
                 </a>
@@ -673,4 +615,30 @@
   }
 </script> -->
 <!-- contact start -->
+@push('scripts')
+<script>
+   $(document).ready(function() {
+    function toaster() {
+     toastr.options = {
+       "debug": false,
+       "positionClass": "toast-bottom-right",
+       "onclick": null,
+       "fadeIn": 300,
+       "fadeOut": 1000,
+       "timeOut": 2000,
+       "extendedTimeOut": 1000
+     }
+   }
+      toastr.options.timeOut = 3000;
+
+      @if(Session::has('error'))
+      toaster();
+      toastr.error('{{ Session::get('error') }}');
+      @elseif(Session::has('success'))
+      toaster();
+      toastr.success('{{ Session::get('success') }}');
+      @endif
+   });
+</script>
+@endpush
 @endsection

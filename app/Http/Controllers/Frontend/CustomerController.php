@@ -27,7 +27,8 @@ class CustomerController extends Controller
   }
   
   public function customer_save(Request $request)
-    {
+{
+        $baseUrl = env('APP_URL');
         $activity_key = uniqid();
         $first_name = $request->input('f_name');
         $email = $request->input('reg_email');
@@ -37,6 +38,7 @@ class CustomerController extends Controller
         $user_name = substr($first_name, 0, 4) . rand(11111, 99999);
         $phone_no = $request->input('phone_number');
         $phoneLen = strlen($phone_no);
+        $image = $baseUrl . 'storage/app/default_image/no_image.png';
 
         if (!empty($_COOKIE["shopping_cart"])) {
             $user_cookieId = ($_COOKIE['shopping_cart']);
@@ -66,6 +68,7 @@ class CustomerController extends Controller
                                             'pos_customer_username' => $user_name,
                                             'pos_customer_email' => $email,
                                             'pos_customer_status' => 1,
+                                            'pos_customer_image'=>$image,
                                             'pos_customer_password' => Hash::make($password)
                                         ]);
                                         if ($register_user) {
@@ -113,6 +116,7 @@ class CustomerController extends Controller
                                             'pos_customer_username' => $user_name,
                                             'pos_customer_email' => $email,
                                             'pos_customer_status' => 1,
+                                            'pos_customer_image'=>$image,
                                             'pos_customer_password' => Hash::make($password)
                                         ]);
                                         if ($register_user) {
@@ -157,6 +161,7 @@ class CustomerController extends Controller
                                         'pos_customer_username' => $user_name,
                                         'pos_customer_email' => $email,
                                         'pos_customer_status' => 1,
+                                        'pos_customer_image'=>$image,
                                         'pos_customer_password' => Hash::make($password)
                                     ]);
                                     if ($register_user) {
