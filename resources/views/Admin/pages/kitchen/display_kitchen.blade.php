@@ -3,29 +3,26 @@
 @section('content')
 <style>
    @media (min-width: 1200px) {
-   .d-xl-inline-block {
-   /* float: revert; */
-   margin-left: 59px !important;
-   display: flex;
-   display: none !important;
+      .d-xl-inline-block {
+      /* float: revert; */
+      margin-left: 59px !important;
+      display: flex;
+      display: none !important;
+      }
    }
-   }
-  
-  
-  
-  
+
   
 .btn-grad {background-image: linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%)}
 .btn-grad {
    margin: 10px;
-   padding: 15px 45px;
+   /* padding: 15px 45px; */
    text-align: center;
    text-transform: uppercase;
    transition: 0.5s;
    background-size: 200% auto;
    color: white;            
    box-shadow: 0 0 20px #eee;
-   border-radius: 10px;
+   border-radius: 0px;
    display: block;
  }
 
