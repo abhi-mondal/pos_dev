@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Model\CustomerModel;
 use Illuminate\Support\Facades\Hash;
+use DateTime;
+use DateTimeZone;
 
 class CartController extends Controller
 {
-    public function cart_added(Request $request)
+   public function cart_added(Request $request)
    {
       if (!empty($_COOKIE["shopping_cart"])) {
          $user_id = ($_COOKIE['shopping_cart']);
@@ -32,14 +34,14 @@ class CartController extends Controller
       $cart_price = $price->final_price * $cart_menu_quantity;
       $attributes = $request->input('attributes');
 
-      $getUserCartProduct = DB::table('pos_user_cart_list')->where('user_id',$user_id)->where('is_closed',0)->get();
+      $getUserCartProduct = DB::table('pos_user_cart_list')->where('user_id', $user_id)->where('is_closed', 0)->get();
       $fetchResId = array();
-      foreach($getUserCartProduct as $getUserCartProducts){
-         array_push($fetchResId,$getUserCartProducts->cart_restaurant_id);
+      foreach ($getUserCartProduct as $getUserCartProducts) {
+         array_push($fetchResId, $getUserCartProducts->cart_restaurant_id);
       }
-      if(in_array($cart_restaurant_id,$fetchResId)){
+      if (in_array($cart_restaurant_id, $fetchResId)) {
          // echo $cart_restaurant_id;
-         $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
+         $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed', 0)->first();
          if (empty($fetch_cart_product)) {
             $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
                'user_id' => $user_id,
@@ -50,8 +52,8 @@ class CartController extends Controller
                'cart_restaurant_id' => $cart_restaurant_id,
                'cart_menu_quantity' => $cart_menu_quantity,
                'added_time' => $added_time,
-               'attributes_id'=>$productAttribute,
-               'value_of_attributes'=>$attributes,
+               'attributes_id' => $productAttribute,
+               'value_of_attributes' => $attributes,
                'is_addon_added' => 0,
                'cart_addons_item' => '0',
                'cart_price' => $cart_price,
@@ -85,40 +87,39 @@ class CartController extends Controller
             }
          }
          setcookie('shopping_cart', 100, time() + (86400 * 30));
-      }
-      else{
+      } else {
          // echo $cart_restaurant_id;
          // $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
          // if (empty($fetch_cart_product)) {
-            $removeOtherResCartProduct = DB::table('pos_user_cart_list')->where('user_id',$user_id)->delete();
-            $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
-               'user_id' => $user_id,
-               'device_id' => '0',
-               'visitor_ip' => $visitor_ip,
-               'cart_id' => $cart_id,
-               'cart_menu_id' => $cart_menu_id,
-               'cart_restaurant_id' => $cart_restaurant_id,
-               'cart_menu_quantity' => $cart_menu_quantity,
-               'added_time' => $added_time,
-               'attributes_id'=>$productAttribute,
-               'value_of_attributes'=>$attributes,
-               'is_addon_added' => 0,
-               'cart_addons_item' => '0',
-               'cart_price' => $cart_price,
-               'is_closed' => 0
-            ]);
+         $removeOtherResCartProduct = DB::table('pos_user_cart_list')->where('user_id', $user_id)->delete();
+         $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
+            'user_id' => $user_id,
+            'device_id' => '0',
+            'visitor_ip' => $visitor_ip,
+            'cart_id' => $cart_id,
+            'cart_menu_id' => $cart_menu_id,
+            'cart_restaurant_id' => $cart_restaurant_id,
+            'cart_menu_quantity' => $cart_menu_quantity,
+            'added_time' => $added_time,
+            'attributes_id' => $productAttribute,
+            'value_of_attributes' => $attributes,
+            'is_addon_added' => 0,
+            'cart_addons_item' => '0',
+            'cart_price' => $cart_price,
+            'is_closed' => 0
+         ]);
 
-            if ($add_to_cart_data) {
-               $request->session()->forget('product_id');
-               $request->session()->forget('restaurent_id');
-               return response()->json([
-                  [1]
-               ]);
-            } else {
-               return response()->json([
-                  [2]
-               ]);
-            }
+         if ($add_to_cart_data) {
+            $request->session()->forget('product_id');
+            $request->session()->forget('restaurent_id');
+            return response()->json([
+               [1]
+            ]);
+         } else {
+            return response()->json([
+               [2]
+            ]);
+         }
          // } 
          // else {
          //    $get_quantity = $fetch_cart_product->cart_menu_quantity;
@@ -255,4 +256,11 @@ class CartController extends Controller
          }
       }
    }
+
+   
+   // public function dateGate(){
+   //    $dateTime = new DateTime('now', new DateTimeZone('America/Toronto'));
+   //    $date1= "".date('l\, F jS\, Y ')."";
+   //    echo $date1;
+   // }
 }
