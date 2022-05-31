@@ -31,52 +31,159 @@ class CartController extends Controller
       $productAttribute = $price->menu_attributes;
       $cart_price = $price->final_price * $cart_menu_quantity;
       $attributes = $request->input('attributes');
-      $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
-      if (empty($fetch_cart_product)) {
-         $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
-            'user_id' => $user_id,
-            'device_id' => '0',
-            'visitor_ip' => $visitor_ip,
-            'cart_id' => $cart_id,
-            'cart_menu_id' => $cart_menu_id,
-            'cart_restaurant_id' => $cart_restaurant_id,
-            'cart_menu_quantity' => $cart_menu_quantity,
-            'added_time' => $added_time,
-           	'attributes_id'=>$productAttribute,
-            'value_of_attributes'=>$attributes,
-            'is_addon_added' => 0,
-            'cart_addons_item' => '0',
-            'cart_price' => $cart_price,
-            'is_closed' => 0
-         ]);
 
-         if ($add_to_cart_data) {
-            $request->session()->forget('product_id');
-            $request->session()->forget('restaurent_id');
-            return response()->json([
-               [1]
-            ]);
-         } else {
-            return response()->json([
-               [2]
-            ]);
-         }
-      } else {
-         $get_quantity = $fetch_cart_product->cart_menu_quantity;
-         $get_price = $fetch_cart_product->cart_price;
-         $update_cart_data = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->update([
-            'cart_menu_quantity' => $get_quantity + $cart_menu_quantity,
-            'cart_price' => $get_price + $cart_price
-         ]);
-         if ($update_cart_data) {
-            $request->session()->forget('product_id');
-            $request->session()->forget('restaurent_id');
-            return response()->json([
-               [1]
-            ]);
-         }
+      $getUserCartProduct = DB::table('pos_user_cart_list')->where('user_id',$user_id)->where('is_closed',0)->get();
+      $fetchResId = array();
+      foreach($getUserCartProduct as $getUserCartProducts){
+         array_push($fetchResId,$getUserCartProducts->cart_restaurant_id);
       }
-      setcookie('shopping_cart', 100, time() + (86400 * 30));
+      if(in_array($cart_restaurant_id,$fetchResId)){
+         // echo $cart_restaurant_id;
+         $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
+         if (empty($fetch_cart_product)) {
+            $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
+               'user_id' => $user_id,
+               'device_id' => '0',
+               'visitor_ip' => $visitor_ip,
+               'cart_id' => $cart_id,
+               'cart_menu_id' => $cart_menu_id,
+               'cart_restaurant_id' => $cart_restaurant_id,
+               'cart_menu_quantity' => $cart_menu_quantity,
+               'added_time' => $added_time,
+               'attributes_id'=>$productAttribute,
+               'value_of_attributes'=>$attributes,
+               'is_addon_added' => 0,
+               'cart_addons_item' => '0',
+               'cart_price' => $cart_price,
+               'is_closed' => 0
+            ]);
+
+            if ($add_to_cart_data) {
+               $request->session()->forget('product_id');
+               $request->session()->forget('restaurent_id');
+               return response()->json([
+                  [1]
+               ]);
+            } else {
+               return response()->json([
+                  [2]
+               ]);
+            }
+         } else {
+            $get_quantity = $fetch_cart_product->cart_menu_quantity;
+            $get_price = $fetch_cart_product->cart_price;
+            $update_cart_data = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->update([
+               'cart_menu_quantity' => $get_quantity + $cart_menu_quantity,
+               'cart_price' => $get_price + $cart_price
+            ]);
+            if ($update_cart_data) {
+               $request->session()->forget('product_id');
+               $request->session()->forget('restaurent_id');
+               return response()->json([
+                  [1]
+               ]);
+            }
+         }
+         setcookie('shopping_cart', 100, time() + (86400 * 30));
+      }
+      else{
+         // echo $cart_restaurant_id;
+         // $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
+         // if (empty($fetch_cart_product)) {
+            $removeOtherResCartProduct = DB::table('pos_user_cart_list')->where('user_id',$user_id)->delete();
+            $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
+               'user_id' => $user_id,
+               'device_id' => '0',
+               'visitor_ip' => $visitor_ip,
+               'cart_id' => $cart_id,
+               'cart_menu_id' => $cart_menu_id,
+               'cart_restaurant_id' => $cart_restaurant_id,
+               'cart_menu_quantity' => $cart_menu_quantity,
+               'added_time' => $added_time,
+               'attributes_id'=>$productAttribute,
+               'value_of_attributes'=>$attributes,
+               'is_addon_added' => 0,
+               'cart_addons_item' => '0',
+               'cart_price' => $cart_price,
+               'is_closed' => 0
+            ]);
+
+            if ($add_to_cart_data) {
+               $request->session()->forget('product_id');
+               $request->session()->forget('restaurent_id');
+               return response()->json([
+                  [1]
+               ]);
+            } else {
+               return response()->json([
+                  [2]
+               ]);
+            }
+         // } 
+         // else {
+         //    $get_quantity = $fetch_cart_product->cart_menu_quantity;
+         //    $get_price = $fetch_cart_product->cart_price;
+         //    $update_cart_data = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->update([
+         //       'cart_menu_quantity' => $get_quantity + $cart_menu_quantity,
+         //       'cart_price' => $get_price + $cart_price
+         //    ]);
+         //    if ($update_cart_data) {
+         //       $request->session()->forget('product_id');
+         //       $request->session()->forget('restaurent_id');
+         //       return response()->json([
+         //          [1]
+         //       ]);
+         //    }
+         // }
+         setcookie('shopping_cart', 100, time() + (86400 * 30));
+      }
+      // die();           
+      // $fetch_cart_product = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->where('is_closed',0)->first();
+      // if (empty($fetch_cart_product)) {
+      //    $add_to_cart_data = DB::table('pos_user_cart_list')->insert([
+      //       'user_id' => $user_id,
+      //       'device_id' => '0',
+      //       'visitor_ip' => $visitor_ip,
+      //       'cart_id' => $cart_id,
+      //       'cart_menu_id' => $cart_menu_id,
+      //       'cart_restaurant_id' => $cart_restaurant_id,
+      //       'cart_menu_quantity' => $cart_menu_quantity,
+      //       'added_time' => $added_time,
+      //      	'attributes_id'=>$productAttribute,
+      //       'value_of_attributes'=>$attributes,
+      //       'is_addon_added' => 0,
+      //       'cart_addons_item' => '0',
+      //       'cart_price' => $cart_price,
+      //       'is_closed' => 0
+      //    ]);
+
+      //    if ($add_to_cart_data) {
+      //       $request->session()->forget('product_id');
+      //       $request->session()->forget('restaurent_id');
+      //       return response()->json([
+      //          [1]
+      //       ]);
+      //    } else {
+      //       return response()->json([
+      //          [2]
+      //       ]);
+      //    }
+      // } else {
+      //    $get_quantity = $fetch_cart_product->cart_menu_quantity;
+      //    $get_price = $fetch_cart_product->cart_price;
+      //    $update_cart_data = DB::table('pos_user_cart_list')->where('cart_menu_id', $cart_menu_id)->where('user_id', $user_id)->update([
+      //       'cart_menu_quantity' => $get_quantity + $cart_menu_quantity,
+      //       'cart_price' => $get_price + $cart_price
+      //    ]);
+      //    if ($update_cart_data) {
+      //       $request->session()->forget('product_id');
+      //       $request->session()->forget('restaurent_id');
+      //       return response()->json([
+      //          [1]
+      //       ]);
+      //    }
+      // }
+      // setcookie('shopping_cart', 100, time() + (86400 * 30));
    }
 
 

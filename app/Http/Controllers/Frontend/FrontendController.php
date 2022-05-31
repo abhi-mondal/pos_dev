@@ -99,7 +99,8 @@ class FrontendController extends Controller
 
 
     public function visitres(Request $request, $unique_id)
-    {
+    {   
+        // echo $unique_id;die;
         $get_res_id = DB::table('users')->where('res_access_token', $unique_id)->first();
         if (empty($get_res_id)) {
             echo "server Error";
