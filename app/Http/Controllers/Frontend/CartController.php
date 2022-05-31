@@ -198,8 +198,8 @@ class CartController extends Controller
          ]);
       }
    }
-  
-  public function cart_plus_item(Request $request, $product_id)
+
+   public function cart_plus_item(Request $request, $product_id)
    {
       $user_id = ($_COOKIE['shopping_cart']);
       $cart_id = $request->input('cart_id');
